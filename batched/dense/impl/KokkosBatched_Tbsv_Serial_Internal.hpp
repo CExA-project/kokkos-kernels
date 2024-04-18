@@ -47,7 +47,7 @@ struct SerialTbsvInternalLower {
 template <>
 template <typename ValueType>
 KOKKOS_INLINE_FUNCTION int
-SerialTbsvInternalLower<Algo::Trsv::Unblocked>::invoke(
+SerialTbsvInternalLower<Algo::Tbsv::Unblocked>::invoke(
     const bool use_unit_diag, const bool do_conj, const int am, const int an,
     const int xn, const ValueType *KOKKOS_RESTRICT A, const int as0,
     const int as1,
@@ -105,7 +105,7 @@ struct SerialTbsvInternalUpper {
 template <>
 template <typename ValueType>
 KOKKOS_INLINE_FUNCTION int
-SerialTbsvInternalUpper<Algo::Trsv::Unblocked>::invoke(
+SerialTbsvInternalUpper<Algo::Tbsv::Unblocked>::invoke(
     const bool use_unit_diag, const bool do_conj, const int am, const int an,
     const int xn, const ValueType *KOKKOS_RESTRICT A, const int as0,
     const int as1,

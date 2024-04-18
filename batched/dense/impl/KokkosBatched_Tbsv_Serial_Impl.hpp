@@ -25,12 +25,12 @@ namespace KokkosBatched {
 //// Lower non-transpose ////
 template <typename ArgDiag>
 struct SerialTbsv<Uplo::Lower, Trans::NoTranspose, ArgDiag,
-                  Algo::Trsv::Unblocked> {
+                  Algo::Tbsv::Unblocked> {
   template <typename AViewType, typename XViewType>
   KOKKOS_INLINE_FUNCTION static int invoke(const AViewType &A,
                                            const XViewType &x, const int k,
                                            const int incx) {
-    return SerialTbsvInternalLower<Algo::Trmm::Unblocked>::invoke(
+    return SerialTbsvInternalLower<Algo::Tbsv::Unblocked>::invoke(
         ArgDiag::use_unit_diag, false, A.extent(0), A.extent(1), x.extent(0),
         A.data(), A.stride_0(), A.stride_1(), x.data(), x.stride_0(), k, incx);
   }
@@ -39,12 +39,12 @@ struct SerialTbsv<Uplo::Lower, Trans::NoTranspose, ArgDiag,
 //// Lower transpose ////
 template <typename ArgDiag>
 struct SerialTbsv<Uplo::Lower, Trans::Transpose, ArgDiag,
-                  Algo::Trsv::Unblocked> {
+                  Algo::Tbsv::Unblocked> {
   template <typename AViewType, typename XViewType>
   KOKKOS_INLINE_FUNCTION static int invoke(const AViewType &A,
                                            const XViewType &x, const int k,
                                            const int incx) {
-    return SerialTbsvInternalLower<Algo::Trmm::Unblocked>::invoke(
+    return SerialTbsvInternalLower<Algo::Tbsv::Unblocked>::invoke(
         ArgDiag::use_unit_diag, false, A.extent(1), A.extent(0), x.extent(0),
         A.data(), A.stride_1(), A.stride_0(), x.data(), x.stride_0(), k, incx);
   }
@@ -53,12 +53,12 @@ struct SerialTbsv<Uplo::Lower, Trans::Transpose, ArgDiag,
 //// Lower conjugate-transpose ////
 template <typename ArgDiag>
 struct SerialTbsv<Uplo::Lower, Trans::ConjTranspose, ArgDiag,
-                  Algo::Trsv::Unblocked> {
+                  Algo::Tbsv::Unblocked> {
   template <typename AViewType, typename XViewType>
   KOKKOS_INLINE_FUNCTION static int invoke(const AViewType &A,
                                            const XViewType &x, const int k,
                                            const int incx) {
-    return SerialTbsvInternalLower<Algo::Trmm::Unblocked>::invoke(
+    return SerialTbsvInternalLower<Algo::Tbsv::Unblocked>::invoke(
         ArgDiag::use_unit_diag, true, A.extent(1), A.extent(0), x.extent(0),
         A.data(), A.stride_1(), A.stride_0(), x.data(), x.stride_0(), k, incx);
   }
@@ -67,12 +67,12 @@ struct SerialTbsv<Uplo::Lower, Trans::ConjTranspose, ArgDiag,
 //// Upper non-transpose ////
 template <typename ArgDiag>
 struct SerialTbsv<Uplo::Upper, Trans::NoTranspose, ArgDiag,
-                  Algo::Trsv::Unblocked> {
+                  Algo::Tbsv::Unblocked> {
   template <typename AViewType, typename XViewType>
   KOKKOS_INLINE_FUNCTION static int invoke(const AViewType &A,
                                            const XViewType &x, const int k,
                                            const int incx) {
-    return SerialTbsvInternalUpper<Algo::Trmm::Unblocked>::invoke(
+    return SerialTbsvInternalUpper<Algo::Tbsv::Unblocked>::invoke(
         ArgDiag::use_unit_diag, false, A.extent(0), A.extent(1), x.extent(0),
         A.data(), A.stride_0(), A.stride_1(), x.data(), x.stride_0(), k, incx);
   }

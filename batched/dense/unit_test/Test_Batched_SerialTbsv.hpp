@@ -20,6 +20,7 @@
 
 #include "KokkosBatched_Util.hpp"
 #include "KokkosBatched_Tbsv_Decl.hpp"
+#include "Test_Utils.hpp"
 
 using namespace KokkosBatched;
 

@@ -1,17 +1,25 @@
-// SPDX-FileCopyrightText: (C) The Kokkos-FFT development team, see COPYRIGHT.md file
-//
-// SPDX-License-Identifier: MIT OR Apache-2.0 WITH LLVM-exception
-
+//@HEADER
+ // ************************************************************************
+ //
+ //                        Kokkos v. 4.0
+ //       Copyright (2022) National Technology & Engineering
+ //               Solutions of Sandia, LLC (NTESS).
+ //
+ // Under the terms of Contract DE-NA0003525 with NTESS,
+ // the U.S. Government retains certain rights in this software.
+ //
+ // Part of Kokkos, under the Apache License v2.0 with LLVM Exceptions.
+ // See https://kokkos.org/LICENSE for license information.
+ // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+ //
+ //@HEADER
 #ifndef TEST_UTILS_HPP
 #define TEST_UTILS_HPP
 
 #include <Kokkos_Core.hpp>
 #include "KokkosBatched_Util.hpp"
-#include <iomanip>
 
-using execution_space = Kokkos::DefaultExecutionSpace;
-
-template <typename AViewType, typename BViewType>
+template <typename ExecutionSpace, typename AViewType, typename BViewType>
 bool allclose(const AViewType& a, const BViewType& b, double rtol = 1.e-5,
               double atol = 1.e-8) {
   constexpr std::size_t rank = AViewType::rank;
@@ -25,7 +33,7 @@ bool allclose(const AViewType& a, const BViewType& b, double rtol = 1.e-5,
 
   int error = 0;
   Kokkos::parallel_reduce(
-      Kokkos::RangePolicy<execution_space, Kokkos::IndexType<std::size_t>>{0,
+      Kokkos::RangePolicy<ExecutionSpace, Kokkos::IndexType<std::size_t>>{0,
                                                                            n},
       KOKKOS_LAMBDA(const int& i, int& err) {
         auto tmp_a = ptr_a[i];
@@ -37,33 +45,6 @@ bool allclose(const AViewType& a, const BViewType& b, double rtol = 1.e-5,
       error);
 
   return error == 0;
-}
-
-template <typename ViewType, typename T>
-void multiply(ViewType& x, T a) {
-  const auto n = x.size();
-  auto* ptr_x  = x.data();
-
-  Kokkos::parallel_for(
-      Kokkos::RangePolicy<execution_space, Kokkos::IndexType<std::size_t>>{0,
-                                                                           n},
-      KOKKOS_LAMBDA(const int& i) { ptr_x[i] = ptr_x[i] * a; });
-}
-
-template <typename ViewType>
-void display(ViewType& a) {
-  auto label   = a.label();
-  const auto n = a.size();
-
-  auto h_a = Kokkos::create_mirror_view(a);
-  Kokkos::deep_copy(h_a, a);
-  auto* data = h_a.data();
-
-  std::cout << std::scientific << std::setprecision(16) << std::flush;
-  for (int i = 0; i < n; i++) {
-    std::cout << label + "[" << i << "]: " << i << ", " << data[i] << std::endl;
-  }
-  std::cout << std::resetiosflags(std::ios_base::floatfield);
 }
 
 template <typename InViewType, typename OutViewType, typename UploType>
@@ -82,15 +63,15 @@ void create_banded_triangular_matrix(InViewType& in, OutViewType& out,
       for (int i0 = 0; i0 < N; i0++) {
         for (int i1 = 0; i1 < k + 1; i1++) {
           for (int i2 = i1; i2 < BlkSize; i2++) {
-            h_out(i0, k - i1, i2) = h_in(i0, i1, i2);
+            h_out(i0, k - i1, i2) = h_in(i0, i2-i1, i2-i1);
           }
         }
       }
     } else {
       for (int i0 = 0; i0 < N; i0++) {
         for (int i1 = 0; i1 < k + 1; i1++) {
-          for (int i2 = i1; i2 < BlkSize - i1; i2++) {
-            h_out(i0, i1, i2) = h_in(i0, i1, i2);
+          for (int i2 = 0; i2 < BlkSize - i1; i2++) {
+            h_out(i0, i1, i2) = h_in(i0, i2+i1, i2+i1);
           }
         }
       }

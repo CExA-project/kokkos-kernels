@@ -126,15 +126,16 @@ SerialTbsvInternalLowerTranspose<Algo::Tbsv::Unblocked>::invoke(
       auto temp = x[j * xs0];
 
       if (do_conj) {
-        if constexpr (Kokkos::ArithTraits<ValueType>::is_complex) {
 #if defined(KOKKOS_ENABLE_PRAGMA_UNROLL)
 #pragma unroll
 #endif
-          for (int i = Kokkos::min(an - 1, j + k); i > j; --i) {
-            temp -= Kokkos::conj(A[(i - j) * as0 + j * as1]) * x[i * xs0];
-          }
-          if (!use_unit_diag) temp = temp / Kokkos::conj(A[0 + j * as1]);
+        for (int i = Kokkos::min(an - 1, j + k); i > j; --i) {
+          temp -=
+              Kokkos::ArithTraits<ValueType>::conj(A[(i - j) * as0 + j * as1]) *
+              x[i * xs0];
         }
+        if (!use_unit_diag)
+          temp = temp / Kokkos::ArithTraits<ValueType>::conj(A[0 + j * as1]);
       } else {
 #if defined(KOKKOS_ENABLE_PRAGMA_UNROLL)
 #pragma unroll
@@ -156,16 +157,17 @@ SerialTbsvInternalLowerTranspose<Algo::Tbsv::Unblocked>::invoke(
       auto temp = x[jx * xs0];
       int ix    = kx;
       if (do_conj) {
-        if constexpr (Kokkos::ArithTraits<ValueType>::is_complex) {
 #if defined(KOKKOS_ENABLE_PRAGMA_UNROLL)
 #pragma unroll
 #endif
-          for (int i = Kokkos::min(an - 1, j + k); i > j; --i) {
-            temp -= Kokkos::conj(A[(i - j) * as0 + j * as1]) * x[ix * xs0];
-            ix -= incx;
-          }
-          if (!use_unit_diag) temp = temp / Kokkos::conj(A[0 + j * as1]);
+        for (int i = Kokkos::min(an - 1, j + k); i > j; --i) {
+          temp -=
+              Kokkos::ArithTraits<ValueType>::conj(A[(i - j) * as0 + j * as1]) *
+              x[ix * xs0];
+          ix -= incx;
         }
+        if (!use_unit_diag)
+          temp = temp / Kokkos::ArithTraits<ValueType>::conj(A[0 + j * as1]);
       } else {
 #if defined(KOKKOS_ENABLE_PRAGMA_UNROLL)
 #pragma unroll
@@ -283,15 +285,17 @@ SerialTbsvInternalUpperTranspose<Algo::Tbsv::Unblocked>::invoke(
     for (int j = 0; j < an; j++) {
       auto temp = x[j * xs0];
       if (do_conj) {
-        if constexpr (Kokkos::ArithTraits<ValueType>::is_complex) {
 #if defined(KOKKOS_ENABLE_PRAGMA_UNROLL)
 #pragma unroll
 #endif
-          for (int i = Kokkos::max(0, j - k); i < j; ++i) {
-            temp -= Kokkos::conj(A[(i + k - j) * as0 + j * as1]) * x[i * xs0];
-          }
-          if (!use_unit_diag) temp = temp / Kokkos::conj(A[k * as0 + j * as1]);
+        for (int i = Kokkos::max(0, j - k); i < j; ++i) {
+          temp -= Kokkos::ArithTraits<ValueType>::conj(
+                      A[(i + k - j) * as0 + j * as1]) *
+                  x[i * xs0];
         }
+        if (!use_unit_diag)
+          temp =
+              temp / Kokkos::ArithTraits<ValueType>::conj(A[k * as0 + j * as1]);
       } else {
 #if defined(KOKKOS_ENABLE_PRAGMA_UNROLL)
 #pragma unroll
@@ -313,16 +317,18 @@ SerialTbsvInternalUpperTranspose<Algo::Tbsv::Unblocked>::invoke(
       auto temp = x[jx * xs0];
       int ix    = kx;
       if (do_conj) {
-        if constexpr (Kokkos::ArithTraits<ValueType>::is_complex) {
 #if defined(KOKKOS_ENABLE_PRAGMA_UNROLL)
 #pragma unroll
 #endif
-          for (int i = Kokkos::max(0, j - k); i < j; ++i) {
-            temp -= Kokkos::conj(A[(i + k - j) * as0 + j * as1]) * x[ix * xs0];
-            ix += incx;
-          }
-          if (!use_unit_diag) temp = temp / Kokkos::conj(A[k * as0 + j * as1]);
+        for (int i = Kokkos::max(0, j - k); i < j; ++i) {
+          temp -= Kokkos::ArithTraits<ValueType>::conj(
+                      A[(i + k - j) * as0 + j * as1]) *
+                  x[ix * xs0];
+          ix += incx;
         }
+        if (!use_unit_diag)
+          temp =
+              temp / Kokkos::ArithTraits<ValueType>::conj(A[k * as0 + j * as1]);
       } else {
 #if defined(KOKKOS_ENABLE_PRAGMA_UNROLL)
 #pragma unroll

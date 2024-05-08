@@ -191,36 +191,76 @@ void impl_test_batched_tbsv_analytical(const int N) {
                                  KokkosBatched::Uplo::Upper>) {
       if constexpr (std::is_same_v<typename ParamTagType::trans,
                                    Trans::NoTranspose>) {
-        h_x_ref(ib, 0)         = 1.0 / 2.0;
-        h_x_ref(ib, 1)         = 1.0 / 6.0;
-        h_x_ref(ib, 2)         = 1.0 / 3.0;
-        h_x1_ref(ib, 0)        = 1.0 / 2.0;
-        h_x1_ref(ib, incx)     = 1.0 / 6.0;
-        h_x1_ref(ib, 2 * incx) = 1.0 / 3.0;
+        if constexpr (std::is_same_v<typename ParamTagType::diag,
+                                     Diag::NonUnit>) {
+          h_x_ref(ib, 0)         = 1.0 / 2.0;
+          h_x_ref(ib, 1)         = 1.0 / 6.0;
+          h_x_ref(ib, 2)         = 1.0 / 3.0;
+          h_x1_ref(ib, 0)        = 1.0 / 2.0;
+          h_x1_ref(ib, incx)     = 1.0 / 6.0;
+          h_x1_ref(ib, 2 * incx) = 1.0 / 3.0;
+        } else {
+          h_x_ref(ib, 0)         = 1.0;
+          h_x_ref(ib, 1)         = -1.0;
+          h_x_ref(ib, 2)         = 1.0;
+          h_x1_ref(ib, 0)        = 1.0;
+          h_x1_ref(ib, incx)     = -1.0;
+          h_x1_ref(ib, 2 * incx) = 1.0;
+        }
       } else {
-        h_x_ref(ib, 0)         = 1.0;
-        h_x_ref(ib, 1)         = 0.0;
-        h_x_ref(ib, 2)         = 0.0;
-        h_x1_ref(ib, 0)        = 1.0;
-        h_x1_ref(ib, incx)     = 0.0;
-        h_x1_ref(ib, 2 * incx) = 0.0;
+        if constexpr (std::is_same_v<typename ParamTagType::diag,
+                                     Diag::NonUnit>) {
+          h_x_ref(ib, 0)         = 1.0;
+          h_x_ref(ib, 1)         = 0.0;
+          h_x_ref(ib, 2)         = 0.0;
+          h_x1_ref(ib, 0)        = 1.0;
+          h_x1_ref(ib, incx)     = 0.0;
+          h_x1_ref(ib, 2 * incx) = 0.0;
+        } else {
+          h_x_ref(ib, 0)         = 1.0;
+          h_x_ref(ib, 1)         = 0.0;
+          h_x_ref(ib, 2)         = 0.0;
+          h_x1_ref(ib, 0)        = 1.0;
+          h_x1_ref(ib, incx)     = 0.0;
+          h_x1_ref(ib, 2 * incx) = 0.0;
+        }
       }
     } else {
       if constexpr (std::is_same_v<typename ParamTagType::trans,
                                    Trans::NoTranspose>) {
-        h_x_ref(ib, 0)         = 1.0;
-        h_x_ref(ib, 1)         = -1.0 / 2.0;
-        h_x_ref(ib, 2)         = -1.0 / 6.0;
-        h_x1_ref(ib, 0)        = 1.0;
-        h_x1_ref(ib, incx)     = -1.0 / 2.0;
-        h_x1_ref(ib, 2 * incx) = -1.0 / 6.0;
+        if constexpr (std::is_same_v<typename ParamTagType::diag,
+                                     Diag::NonUnit>) {
+          h_x_ref(ib, 0)         = 1.0;
+          h_x_ref(ib, 1)         = -1.0 / 2.0;
+          h_x_ref(ib, 2)         = -1.0 / 6.0;
+          h_x1_ref(ib, 0)        = 1.0;
+          h_x1_ref(ib, incx)     = -1.0 / 2.0;
+          h_x1_ref(ib, 2 * incx) = -1.0 / 6.0;
+        } else {
+          h_x_ref(ib, 0)         = 1.0;
+          h_x_ref(ib, 1)         = -1.0;
+          h_x_ref(ib, 2)         = 1.0;
+          h_x1_ref(ib, 0)        = 1.0;
+          h_x1_ref(ib, incx)     = -1.0;
+          h_x1_ref(ib, 2 * incx) = 1.0;
+        }
       } else {
-        h_x_ref(ib, 0)         = 0.0;
-        h_x_ref(ib, 1)         = 0.0;
-        h_x_ref(ib, 2)         = 1.0 / 3.0;
-        h_x1_ref(ib, 0)        = 0.0;
-        h_x1_ref(ib, incx)     = 0.0;
-        h_x1_ref(ib, 2 * incx) = 1.0 / 3.0;
+        if constexpr (std::is_same_v<typename ParamTagType::diag,
+                                     Diag::NonUnit>) {
+          h_x_ref(ib, 0)         = 0.0;
+          h_x_ref(ib, 1)         = 0.0;
+          h_x_ref(ib, 2)         = 1.0 / 3.0;
+          h_x1_ref(ib, 0)        = 0.0;
+          h_x1_ref(ib, incx)     = 0.0;
+          h_x1_ref(ib, 2 * incx) = 1.0 / 3.0;
+        } else {
+          h_x_ref(ib, 0)         = 2.0;
+          h_x_ref(ib, 1)         = -2.0;
+          h_x_ref(ib, 2)         = 1.0;
+          h_x1_ref(ib, 0)        = 2.0;
+          h_x1_ref(ib, incx)     = -2.0;
+          h_x1_ref(ib, 2 * incx) = 1.0;
+        }
       }
     }
   }
